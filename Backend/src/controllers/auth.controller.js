@@ -92,8 +92,12 @@ async function loginUserController(req, res) {
         config.JWT_SECRET,
         { expiresIn: '1d' }
     )
-
-    res.cookie('token', token)
+    // res.cookie('token', token)
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        // sameSite: 'lax',
+    })
     res.status(200).json({
         message: "User Logged in Successfully",
         user: {
@@ -123,7 +127,14 @@ async function logoutUserController(req, res) {
 
         await tokenBlackListModel.create({ token })
 
-        res.clearCookie('token')
+        // res.clearCookie('token')
+
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: false,
+            // sameSite: 'lax'
+        })
+
         res.status(200).json({
             message: "User Logged Out Successfully"
         })

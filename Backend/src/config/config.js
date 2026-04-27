@@ -9,6 +9,7 @@ if (!process.env.JWT_SECRET) {
 }
 const config = {
     MONGO_URI: process.env.MONGO_URI,
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    GENAI_KEY: process.env.GOOGLE_GENAI_API_KEY
 }
 module.exports = config;

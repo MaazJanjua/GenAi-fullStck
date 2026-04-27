@@ -1,3 +1,4 @@
+//ISS MIAN BLACKLISTED KS LOGIN GLAT HA CHECK GLAT HA 
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 const tokenBlackListModel = require('../models/blacklist.model')
@@ -10,16 +11,23 @@ async function authUser(req, res, next) {
         })
     }
     try {
-        const decoded = jwt.verify(token, config.JWT_SECRET)
-        req.user = decoded
-        next()
-
+        // ✅ 1. Check blacklist FIRST
         const isTokenBlackListed = await tokenBlackListModel.findOne({ token })
-        if (!isTokenBlackListed) {
+
+        if (isTokenBlackListed) {
             return res.status(401).json({
-                message: 'token is invalid'
+                message: 'Token is blacklisted'
             })
         }
+
+        // ✅ 2. Verify token
+        const decoded = jwt.verify(token, config.JWT_SECRET)
+        req.user = decoded
+
+        // ✅ 3. NEXT at the END
+        next()
+
+
 
     } catch (error) {
         return res.status(401).json({
