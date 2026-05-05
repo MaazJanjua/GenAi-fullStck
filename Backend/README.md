@@ -267,3 +267,72 @@ last main yeah do requirment chori thi ai ko denay say
 3- technicalQuestions REQUIRED with provide intention and ANSWERS both with numbering like QUESTION NO # 1 ANSWER NO #1
 
 4- behaviouralQuestions REQUIRED with provide intention and ANSWERS both with numbering like QUESTION NO # 1 ANSWER NO #1
+
+
+3-technicalQuestions REQUIRED with provide intention and ANSWERS both with numbering like QUESTION NO # 1 ANSWER NO #1:
+- question
+- intention
+- answer
+
+4- behaviouralQuestions REQUIRED with provide intention and ANSWERS both with numbering like QUESTION NO # 1 ANSWER NO #1:
+- question
+- intention
+- answer
+5- intention also required with  every question and answer
+6:-Each question, intention, and answer should be on separate lines. For example, when the question ends, the intention should start on the next line, and when the intention ends, the answer should start on the next line.
+
+
+
+
+
+
+const interviewReportSchema = z.object({
+
+
+    matchScore: z.number().describe(
+        "A score between 0 and 100 indicating how well the candidate`s profile matches the job description. total must equal the sum of all four categories."
+    ),
+
+    technicalQuestions: z.array(z.object({
+        question: z.string().describe("The technical question can be asked in the interview"),
+        intention: z.string().describe("The intention of interviewer behind asking this technical question"),
+        answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
+    })).min(5).describe(
+        "Technical questions can be asked in the interview along with their intention and how to answer them with  strong answers."
+    ),
+
+    behavioralQuestions: z.array(z.object({
+        question: z.string().describe("The technical question can be asked in the interview"),
+        intention: z.string().describe("The intention of interviewer behind asking this technical question"),
+        answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
+    })).describe(
+        "Behavioral Questions questions can be asked in the interview along with their intention and how to answer them with  strong answers."
+    ),
+
+    skillsGap: z.array(z.object({
+        skill: z.string().describe(
+            "The skills which the canditate is lackiing."
+        ),
+        severity: z.enum(['low', 'medium', 'high']).describe(
+            "The severity of this skill gap, i.e."
+        )
+    })).describe(
+        "List of skill gaps in the candidate`s profile along with their severity"
+    ),
+
+    preparationPlan: z.array(z.object({
+        day: z.number().describe(
+            "The day number in the preparation plan, starting from 1, (e.g., 1, 2, 3...)."
+        ),
+        focus: z.string().describe(
+            "The main focuse of this day in the preparation plan, e.g data."
+        ),
+        tasks: z.array(z.string()).describe("List of tasks to be done on this day to follow the preparation")
+    })).describe(
+        "A day-wise preparation plan for the candidate to follow in order to prepare for the interview effectively."
+    ),
+
+
+}).describe(
+    "Generate a structured interview report based on resume and job description."
+);

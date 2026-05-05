@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -12,8 +13,13 @@ const Register = () => {
   const { loading, handleRegister } = useAuth()
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await handleRegister({ username, email, password }) 
-    navigate('/')
+    const result = await handleRegister({ username, email, password })
+    if (result.success) {
+      toast.success("Account created successfully 🚀");
+      navigate('/')
+    } else {
+      toast.error(result.message);
+    }
   }
 
 
@@ -85,7 +91,7 @@ const Register = () => {
         </form>
 
         {/* <p>Already have an account? <Link to={'/login'} className='text-blue-600 font-bold underline text-[.8vw]'>Login</Link> </p> */}
-        <p className='pt-[1vh] text-[1.3vw] font-bold'>Already have an account <Link to={'/login'} className='text-blue-600 font-bold underline text-[1.5vw] '>Login</Link> </p>
+        <p className='pt-[1vh] text-[1.3vw] font-bold'>Already have an account <Link to={'/login'} className='text-blue-600 font-bold underline text-[1.5vw] '>Register</Link> </p>
 
       </div>
     </main>

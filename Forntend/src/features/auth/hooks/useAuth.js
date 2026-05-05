@@ -27,9 +27,15 @@ export const useAuth = () => {
         try {
             const data = await register({ username, email, password })
             setUser(data.user)
+
+            return { success: true };
         } catch (error) {
-            console.log(error);
-            throw error
+            // console.log(error);
+            // throw error
+            return {
+                success: false,
+                message: error?.response?.data?.message || "Registration failed",
+            };
         } finally {
 
             setLoading(false)
