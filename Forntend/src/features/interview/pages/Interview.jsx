@@ -1,143 +1,33 @@
 "use client";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Brain, Code2, Map } from "lucide-react";
+import { useInterview } from '../hooks/useInterview'
 
-const data = {
-  technicalQuestions: [
-    {
-      question: "What is the difference between let, const and var?",
-      answer: "var is function scoped, while let and const are block scoped. const cannot be reassigned.",
-      intention: "Check understanding of JavaScript fundamentals and scope."
-    },
-    {
-      question: "What is a REST API?",
-      answer: "REST API is an architectural style that uses HTTP methods like GET, POST, PUT, DELETE.",
-      intention: "Evaluate backend and API knowledge."
-    },
-    {
-      question: "Explain React Virtual DOM",
-      answer: "Virtual DOM is a lightweight copy of real DOM. React updates it first, then efficiently updates real DOM.",
-      intention: "Check React performance understanding."
-    }, {
-      question: "What is the difference between let, const and var?",
-      answer: "var is function scoped, while let and const are block scoped. const cannot be reassigned.",
-      intention: "Check understanding of JavaScript fundamentals and scope."
-    },
-    {
-      question: "What is a REST API?",
-      answer: "REST API is an architectural style that uses HTTP methods like GET, POST, PUT, DELETE.",
-      intention: "Evaluate backend and API knowledge."
-    },
-    {
-      question: "Explain React Virtual DOM",
-      answer: "Virtual DOM is a lightweight copy of real DOM. React updates it first, then efficiently updates real DOM.",
-      intention: "Check React performance understanding."
-    }, {
-      question: "What is the difference between let, const and var?",
-      answer: "var is function scoped, while let and const are block scoped. const cannot be reassigned.",
-      intention: "Check understanding of JavaScript fundamentals and scope."
-    },
-    {
-      question: "What is a REST API?",
-      answer: "REST API is an architectural style that uses HTTP methods like GET, POST, PUT, DELETE.",
-      intention: "Evaluate backend and API knowledge."
-    },
-    {
-      question: "Explain React Virtual DOM",
-      answer: "Virtual DOM is a lightweight copy of real DOM. React updates it first, then efficiently updates real DOM.",
-      intention: "Check React performance understanding."
-    }, {
-      question: "What is the difference between let, const and var?",
-      answer: "var is function scoped, while let and const are block scoped. const cannot be reassigned.",
-      intention: "Check understanding of JavaScript fundamentals and scope."
-    },
-    {
-      question: "What is a REST API?",
-      answer: "REST API is an architectural style that uses HTTP methods like GET, POST, PUT, DELETE.",
-      intention: "Evaluate backend and API knowledge."
-    },
-    {
-      question: "Explain React Virtual DOM",
-      answer: "Virtual DOM is a lightweight copy of real DOM. React updates it first, then efficiently updates real DOM.",
-      intention: "Check React performance understanding."
-    }
-  ],
-
-  behavioralQuestions: [
-    {
-      question: "Tell me about a challenging project you worked on.",
-      answer: "I built a full-stack app with authentication and faced issues in JWT handling which I solved.",
-      intention: "Assess problem-solving and real-world experience."
-    },
-    {
-      question: "How do you handle tight deadlines?",
-      answer: "I prioritize tasks, break them into smaller parts, and focus on critical features first.",
-      intention: "Evaluate time management skills."
-    },
-    {
-      question: "Why should we hire you?",
-      answer: "I have strong MERN stack skills and real project experience with deployment.",
-      intention: "Check confidence and self-awareness."
-    }
-  ],
-
-  preparationPlan: [
-    {
-      day: 1,
-      focus: "JavaScript Basics",
-      tasks: [
-        "Revise let, const, var",
-        "Practice closures",
-        "Solve 5 JS questions"
-      ]
-    },
-    {
-      day: 2,
-      focus: "React Fundamentals",
-      tasks: [
-        "Understand hooks",
-        "Build small component",
-        "Revise state management"
-      ]
-    },
-    {
-      day: 3,
-      focus: "Backend APIs",
-      tasks: [
-        "Create Express server",
-        "Build REST API",
-        "Test using Postman"
-      ]
-    }
-  ],
-
-  skillsGap: [
-    { skill: "System Design" },
-    { skill: "Redis" },
-    { skill: "Testing (Jest)" },
-    { skill: "DevOps Basics" }
-  ]
-};
 
 export default function Interview() {
+
+
   const [activeTab, setActiveTab] = useState("technical");
   const [openIndex, setOpenIndex] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+
+  const { report } = useInterview()
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   const getQuestions = () => {
-    if (!data) return [];
-    if (activeTab === "technical") return data.technicalQuestions;
-    if (activeTab === "behavioral") return data.behavioralQuestions;
-    return data.preparationPlan;
+    if (!report) return [];
+    if (activeTab === "technical") return report.technicalQuestions;
+    if (activeTab === "behavioral") return report.behavioralQuestions;
+    return report.preparationPlan;
   };
 
   const questions = getQuestions();
 
-  // Tab buttons data for easy mapping
+  // Tab buttons report for easy mapping
   const tabs = [
     { id: "technical", label: "Technical Questions", icon: Code2 },
     { id: "behavioral", label: "Behavioral Questions", icon: Brain },
@@ -219,7 +109,7 @@ export default function Interview() {
               <div className="mt-4 pt-4 border-t border-gray-800 lg:mt-auto lg:pt-6">
                 <h3 className="text-sm font-semibold text-gray-400 mb-3 px-2">Skill Gaps to Fill</h3>
                 <div className="flex flex-wrap gap-2 px-2">
-                  {data?.skillsGap?.map((s, i) => (
+                  {report?.skillsGap?.map((s, i) => (
                     <span key={i} className="px-3 py-1.5 text-xs rounded-full bg-linear-to-r from-sky-950/80 to-sky-900/50 border border-sky-700/40 text-sky-300 font-medium">
                       {s.skill}
                     </span>
@@ -233,7 +123,7 @@ export default function Interview() {
               <div className="p-4 sm:p-5 md:p-6 overflow-y-auto h-full max-h-[70vh] lg:max-h-[85vh] 
             
               ">
-                {!data ? (
+                {!report ? (
                   <div className="flex items-center justify-center h-64">
                     <p className="text-center text-gray-400">Loading content...</p>
                   </div>
@@ -312,13 +202,25 @@ export default function Interview() {
             </div>
 
             {/* RIGHT SIDEBAR - Skills Gaps (Desktop only, mobile shown above in drawer) */}
+
+
+
+
+
+
+
+
+
+
+
+            
             <div className="hidden lg:block lg:col-span-3 bg-gray-900/50 p-5 border-l border-gray-800 ">
               <div className="sticky top-4 flex flex-col h-full ">
                 <h2 className="mb-5 text-xl font-bold bg-linear-to-r from-sky-400 to-blue-400 bg-clip-text text-transparent">
                   🎯 Skill Gaps
                 </h2>
                 <div className="flex flex-wrap gap-2.5">
-                  {data?.skillsGap?.map((s, i) => (
+                  {report?.skillsGap?.map((s, i) => (
                     <span key={i} className="px-3 py-1.5 text-sm rounded-full bg-linear-to-r from-sky-950 to-sky-900/70 border border-sky-700/50 text-sky-300 font-medium">
                       {s.skill}
                     </span>
@@ -337,20 +239,23 @@ export default function Interview() {
           </div>
         </div>
 
+
+        
+
         {/* Mobile Bottom Skills Bar (shown only when menu closed and on mobile) */}
         <div className="lg:hidden mt-3">
           {!mobileMenuOpen && (
             <div className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-3 border border-gray-800">
               <h3 className="text-xs font-semibold text-gray-400 mb-2">⚡ Key Skills to Learn</h3>
               <div className="flex flex-wrap gap-1.5">
-                {data?.skillsGap?.slice(0, 3).map((s, i) => (
+                {report?.skillsGap?.slice(0, 3).map((s, i) => (
                   <span key={i} className="px-2 py-1 text-xs rounded-full bg-sky-950/70 border border-sky-800/50 text-sky-300">
                     {s.skill}
                   </span>
                 ))}
-                {data?.skillsGap?.length > 3 && (
+                {report?.skillsGap?.length > 3 && (
                   <span className="px-2 py-1 text-xs rounded-full bg-gray-800 text-gray-400">
-                    +{data.skillsGap.length - 3} more
+                    +{report.skillsGap.length - 3} more
                   </span>
                 )}
               </div>

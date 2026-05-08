@@ -24,7 +24,7 @@ const ai = new GoogleGenAI({
 
 const interviewReportSchema = z.object({
 
-
+    title: z.string().default("Interview Report"),
     matchScore: z.number().describe(
         "A score between 0 and 100 indicating how well the candidate`s profile matches the job description. total must equal the sum of all four categories."
     ),
@@ -79,9 +79,9 @@ const interviewReportSchema = z.object({
         .describe(
             "A day-wise preparation plan for the candidate to follow in order to prepare for the interview effectively."
         ),
-        title: z.string().describe(
-            "The title of the job for which the interview report is generated."
-        )
+    title: z.string().describe(
+        "The title of the job for which the interview report is generated."
+    )
 
 }).describe(
     "Generate a structured interview report based on resume and job description."
@@ -96,6 +96,7 @@ Return ONLY valid JSON.
 Required structure:
 
 {
+  "title":" ",
   "matchScore": number,
   "technicalQuestions": [
     {
@@ -170,6 +171,7 @@ ${jobDescription}
     // const report = interviewReportSchema.parse(parsedData);
     // console.log(JSON.parse(response.text));
     const parsedData = JSON.parse(response.text);
+    parsedData.title = "Interview Report"
     // return parsedData
     // return JSON.parse(response.text);
     // return report

@@ -1,24 +1,60 @@
-import React, { useState } from 'react'
-import { RiSparkling2Fill,RiAccountCircleFill,RiFolderAddFill } from "@remixicon/react";
+import React, { useState, useRef } from 'react'
+import { RiSparkling2Fill, RiAccountCircleFill, RiFolderAddFill } from "@remixicon/react";
+import { useInterview } from '../hooks/useInterview';
+import { useNavigate } from 'react-router-dom';
+import { FiLoader } from "react-icons/fi";
 
 const MyComponent = () => {
-  return (
-    <RiHeartFill
-      size={36} // set custom `width` and `height`
-      color="red" // set `fill` color
-      className="my-icon" // add custom class name
-    />
-  );
+    return (
+        <RiHeartFill
+            size={36} // set custom `width` and `height`
+            color="red" // set `fill` color
+            className="my-icon" // add custom class name
+        />
+    );
 };
 
 const Home = () => {
     const [fileName, setFileName] = useState('')
+
+    const {loading, generateReport} = useInterview();
+    const [jobDescription, setJobDescription] = useState('');
+    const [selfDescription, setSelfDescription] = useState('');
+    const resumeInputRef = useRef();
+
+    const navigate = useNavigate();
 
     const handleFileChange = (e) => {
         if (e.target.files[0]) {
             setFileName(e.target.files[0].name)
         }
     }
+
+    const handleGenerateReport = async () => {
+        const resumeFile = resumeInputRef.current.files[0];
+        if (!resumeFile) {
+            alert('Please upload your resume before generating the report.');
+            return;
+        }
+        const data = await generateReport({ jobDescription, selfDescription, resumeFile });
+        navigate(`/interview/${data._id}`);
+    }
+
+    if (loading) {
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-linear-to-r from-gray-900 to-gray-800 z-50">
+                <div className="text-center">
+                    <FiLoader className="animate-spin text-5xl text-white mx-auto" />
+                    <p className="mt-4 text-white text-lg font-medium tracking-wide">Loading...</p>
+                    <div className="w-32 h-1 bg-white/20 rounded-full mt-4 mx-auto overflow-hidden">
+                        <div className="w-1/2 h-full bg-white rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    // const { loading, generateReport } = useInterview()
 
     return (
         <>
@@ -97,6 +133,7 @@ const Home = () => {
                                 Job Description
                             </label>
                             <textarea
+                                onChange={(e) => { setJobDescription(e.target.value) }}
                                 name="jobDescription"
                                 id="jobDescription"
                                 placeholder='📝 Enter job description Here....'
@@ -122,6 +159,7 @@ const Home = () => {
                                 </label>
                                 <div className='relative'>
                                     <input
+                                        ref={resumeInputRef}
                                         type="file"
                                         name='resume'
                                         id='resume'
@@ -140,7 +178,7 @@ const Home = () => {
                                     />
                                     {!fileName && (
                                         <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
-                                           <RiFolderAddFill />
+                                            <RiFolderAddFill />
                                         </div>
                                     )}
                                 </div>
@@ -169,6 +207,7 @@ const Home = () => {
                                     Self Description
                                 </label>
                                 <textarea
+                                    onChange={(e) => setSelfDescription(e.target.value)}
                                     name="selfDescripption"
                                     id="selfDescripption"
                                     placeholder='✍️ Describe yourself in this field...'
@@ -183,7 +222,9 @@ const Home = () => {
                             </div>
 
                             {/* Generate Button */}
-                            <button className="genherate-btn w-full py-2.5 xs:py-3 sm:py-3.5 md:py-4 lg:py-5
+                            <button
+                                onClick={handleGenerateReport}
+                                className="genherate-btn w-full py-2.5 xs:py-3 sm:py-3.5 md:py-4 lg:py-5
                                            bg-linear-to-r from-sky-600 to-blue-600 
                                            hover:from-sky-700 hover:to-blue-700 
                                            text-white font-bold rounded-xl 
