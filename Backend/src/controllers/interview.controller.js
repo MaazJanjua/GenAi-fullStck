@@ -31,6 +31,7 @@
 const pdfParse = require("pdf-parse");
 const generateInterviewReport = require("../services/ai.service");
 const interviewReportModel = require("../models/interviewReport.model");
+// const { default: Interview } = require("../../../Forntend/src/features/interview/pages/Interview");
 
 async function generateInterviewReportController(req, res) {
     // const resumeContent = (new pdfParse.PDFParse(req.file.buffer)).getText()
@@ -58,7 +59,6 @@ async function generateInterviewReportController(req, res) {
         interviewReport
     });
 }
-
 /**
  * @description Controller to get interview report by interviewId.
  */
@@ -75,26 +75,45 @@ async function getInterviewReportByIdController(req, res) {
         })
     }
     res.status(200).json({
-        message:"Interview report fetached successfully",
+        message: "Interview report fetached successfully",
         interviewReport
     })
 
 }
-
 /**
  * @description Controller to get all interview reports of the user.
  */
 async function getAllInterviewReportsController(req, res) {
-const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select('-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillsGap -preparationPlan') 
+    const interviewReports = await interviewReportModel
+        .find({ user: req.user.id }).sort({ createdAt: -1 })
+        .select('-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillsGap -preparationPlan')
 
     res.status(200).json({
         message: "All interview reports fetched successfully",
         interviewReports
     });
 }
- 
+async function deleteInterviewReportController(req, res) {
+    const { id } = req.params;
+    const report =await interviewReportModel.findById(id);
+    if (!report) {
+        return res.status(401).json(
+            {
+                message: "Report not found"
+            }
+        )
+    }
+
+    await interviewReportModel.findByIdAndDelete(id)
+    res.status(200).json({
+        message: "Report deleted successfully"
+    })
+
+}
+
 module.exports = {
     generateInterviewReportController,
     getInterviewReportByIdController,
-    getAllInterviewReportsController
+    getAllInterviewReportsController,
+    deleteInterviewReportController
 };

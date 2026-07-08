@@ -17,7 +17,7 @@ const MyComponent = () => {
 const Home = () => {
     const [fileName, setFileName] = useState('')
 
-    const {loading, generateReport} = useInterview();
+    const { loading, generateReport, reports, deleteReport } = useInterview();
     const [jobDescription, setJobDescription] = useState('');
     const [selfDescription, setSelfDescription] = useState('');
     const resumeInputRef = useRef();
@@ -248,6 +248,140 @@ const Home = () => {
                             </div>
                         </div>
                     </div>
+                    {/* =========================
+                          RECENT REPORTS SECTION
+                        ========================= */}
+                    {reports.length > 0 && (
+                        <section className='recent-reports w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10 lg:py-12'>
+                            {/* Section Header */}
+                            <div className="reports-header flex justify-between items-baseline flex-wrap gap-3 mb-4 sm:mb-6 md:mb-8">
+                                {/* Main Heading */}
+
+                                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-linear-to-r from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                                    My Recent Interview Reports
+                                </h2>
+                                {/* Total Reports Count */}
+                                <span className="reports-count bg-gray-100 dark:bg-gray-800 px-2.5 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">
+                                    {reports.length} report{reports.length !== 1 ? 's' : ''}
+                                </span>
+                            </div>
+
+                            {/* Responsive grid: 1 column on mobile, 2 on tablet, 3 on desktop */}
+                            <ul className='reports-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6'>
+
+                                {reports.map(report => (
+                                    <li
+                                        key={report._id}
+                                        // {/* Single Report Card */}
+
+                                        className='report-item relative group flex flex-col p-4 sm:p-5 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-lg border border-gray-200 dark:border-gray-700 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 dark:hover:border-blue-400'
+                                        // {/* Navigate to Report Details */}
+
+                                        onClick={() => navigate(`/interview/${report._id}`)}
+                                    >
+                                        {/* REPORT DELETE BUTTON */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteReport(report._id);
+                                            }}
+                                            className="absolute top-3 right-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all duration-200 z-999"
+                                        >
+                                            <svg
+                                                className="w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-7 0h8"
+                                                />
+                                            </svg>
+                                        </button>
+                                        {/* REPORT DESIGN(ICONS) */}
+                                        {/* Top Card Icons */}
+                                        <div className="flex items-start gap-3 sm:gap-4 mb-3">
+                                            {/* //REPORT ICON */}
+                                            {/* Report Icon */}
+                                            <div className="report-icon shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
+                                                <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M4 4H20V20H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                                                    <path d="M8 7H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                                    <path d="M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                                    <path d="M8 17H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                                </svg>
+                                            </div>
+                                            {/* //REPORT ARROW */}
+                                            {/* Hover Arrow */}
+                                            <div className="report-arrow ml-auto text-gray-400 dark:text-gray-600 transition-transform duration-300 group-hover:translate-x-1">
+                                                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M9 18L15 12L9 6"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round" />
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        {/* Report Content */}
+
+                                        <div className="report-content flex-1">
+                                            {/* //REPORT TITLE */}
+                                            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                                                {report.title || 'Untitled Position'}
+                                            </h3>
+                                            {/* Report Meta Data */}
+                                            <div className="report-meta flex flex-col gap-2">
+                                                {/* Date + Match Score */}
+                                                <span className="report-date flex justify-between items-center text-center gap-1.5 text-xs sm:text-sm text-gray-500 dark:text-gray-400 ">
+                                                    {/* // GENERATED REPORT DATE */}
+                                                    <div className='flex items-center gap-[1.2vw]'>
+
+                                                        <svg className="w-6 h-6 sm:w-4.5 sm:h-4.5 border border-green-900 rounded-full bg-green-800 p-0.2 text-white"
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <circle cx="12" cy="12" r="10" 
+                                                            stroke="currentColor" 
+                                                            strokeWidth="2" />
+                                                            <polyline points="12 6 12 12 16 14" 
+                                                            stroke="currentColor" strokeWidth="2" 
+                                                            fill="none" />
+                                                        </svg>
+                                                        {new Date(report.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric'
+                                                        })}
+
+                                                    </div>
+                                                    {/* //MATCH SCORE */}
+                                                    <div>
+                                                        <p className={`match-score font-bold text-red-500 ${report.matchScore >= 80 ? 'score--high' : report.matchScore >= 60 ? 'score-mid' : "score-low"}`}>Match Score : {report.matchScore}%</p>
+                                                    </div>
+                                                </span>
+                                                {/* //INTERVIEW SCORE */}
+                                                {/* {report.interviewScore && (
+                                                    <span className="report-score inline-flex items-center gap-1.5 text-xs sm:text-sm bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-full text-blue-700 dark:text-blue-300 w-fit">
+                                                        <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24 border border-green-500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z" stroke="currentColor" strokeWidth="2" fill="none" />
+                                                        </svg>
+                                                        Score: {report.interviewScore}%
+
+                                                    </span>
+                                                )} */}
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    )}
 
                     {/* Footer Section - AI Report Info */}
                     <div className='flex flex-col justify-center items-center w-full mt-6 sm:mt-8 md:mt-10 lg:mt-12'>

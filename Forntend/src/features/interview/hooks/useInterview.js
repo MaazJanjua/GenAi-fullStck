@@ -1,8 +1,11 @@
-import { getAllInterviewReports, generateInterviewReport, getInterviewReportById } from '../services/interview.api';
-import { useContext } from 'react';
+import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, deleteInterviewReportApi } from '../services/interview.api';
+import { useContext, useEffect } from 'react';
 import { InterviewContext } from '../interview.context';
+import { useNavigate, useParams } from 'react-router';
 
 export const useInterview = () => {
+    const navigate = useNavigate();
+    const { interviewId } = useParams();
     const context = useContext(InterviewContext)
     if (!context) {
         throw new Error('useInterview must be used within an InterviewProvider')
@@ -13,7 +16,7 @@ export const useInterview = () => {
         setLoading(true);
         let response = null;
         try {
-             response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
+            response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
             setReport(response.interviewReport)
         } catch (error) {
             console.error('Error generating interview report:', error)
@@ -25,16 +28,23 @@ export const useInterview = () => {
 
     const getReportById = async (interviewId) => {
         setLoading(true);
+
         let response = null;
+
         try {
             response = await getInterviewReportById(interviewId)
+
+            console.log(response)
+
             setReport(response.interviewReport)
+
         } catch (error) {
             console.error('Error fetching interview report:', error)
         } finally {
             setLoading(false)
         }
-        return response .interviewReport;
+
+        return response?.interviewReport
     }
 
     const getReports = async () => {
@@ -51,5 +61,42 @@ export const useInterview = () => {
         return response.interviewReports;
     }
 
-    return { loading, setLoading, report, setReport, reports, setReports, generateReport, getReportById, getReports };
+    const deleteReport = async (id) => {
+        try {
+
+            await deleteInterviewReportApi(id);
+
+            setReports((prev) =>
+                prev.filter((report) => report._id !== id)
+            );
+
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        if (interviewId) {
+            getReportById(interviewId)
+        } else {
+            getReports()
+        }
+    }, [interviewId])
+    // const clearReport = () => {
+    //     // setReport(null)
+    //     navigate('/')
+    // }
+    return {
+        loading,
+        setLoading,
+        report,
+        setReport,
+        reports,
+        setReports,
+        generateReport,
+        getReportById,
+        getReports,
+        deleteReport
+        // clearReport
+    };
 }

@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Brain, Code2, Map } from "lucide-react";
-import { useInterview } from '../hooks/useInterview'
+import { useInterview } from '../hooks/useInterview';
+import { useNavigate, useParams } from "react-router";
 
 
 export default function Interview() {
@@ -12,7 +13,17 @@ export default function Interview() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 
-  const { report } = useInterview()
+  const { report, getReportById, loading, clearReport } = useInterview()
+  const { interviewId } = useParams();
+
+  useEffect(() => {
+    if (interviewId && !report) {
+      getReportById(interviewId);
+    }
+    console.log(interviewId) 
+    console.log(report)
+  }, [interviewId]);
+
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -56,7 +67,17 @@ export default function Interview() {
               </svg>
             </button>
           </div>
+
+
         </div>
+        {/* <div className="mt-4">
+            <button
+              onClick={() => clearReport()}
+              className="px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all duration-200"
+            >
+              Clear Report
+            </button>
+          </div> */}
 
         {/* Main Container - Responsive Grid Layout */}
         <div className="bg-gray-900/40  backdrop-blur-sm rounded-2xl border border-gray-800 overflow-hidden shadow-2xl ">
@@ -123,9 +144,13 @@ export default function Interview() {
               <div className="p-4 sm:p-5 md:p-6 overflow-y-auto h-full max-h-[70vh] lg:max-h-[85vh] 
             
               ">
-                {!report ? (
+                {loading ? (
                   <div className="flex items-center justify-center h-64">
                     <p className="text-center text-gray-400">Loading content...</p>
+                  </div>
+                ) : !report ? (
+                  <div className="flex items-center justify-center h-64">
+                    <p className="text-center text-gray-400">No Report Found</p>
                   </div>
                 ) : (
                   <div className="space-y-3 sm:space-y-4">
@@ -213,7 +238,7 @@ export default function Interview() {
 
 
 
-            
+
             <div className="hidden lg:block lg:col-span-3 bg-gray-900/50 p-5 border-l border-gray-800 ">
               <div className="sticky top-4 flex flex-col h-full ">
                 <h2 className="mb-5 text-xl font-bold bg-linear-to-r from-sky-400 to-blue-400 bg-clip-text text-transparent">
@@ -240,7 +265,7 @@ export default function Interview() {
         </div>
 
 
-        
+
 
         {/* Mobile Bottom Skills Bar (shown only when menu closed and on mobile) */}
         <div className="lg:hidden mt-3">

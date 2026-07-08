@@ -127,13 +127,26 @@ Required structure:
   ]
 }
 
+
 Rules:
-- Never return empty arrays
-- Minimum 3 technical questions
-- Minimum 3 behavioral questions
-- Minimum 3 skills gaps
-- Minimum 5 preparation plan days
-- matchScore must be 0 to 100
+matchScore must be calculated using weighted scoring:
+
+- skills match (30%)
+- experience relevance (20%)
+- tools/framework alignment (20%)
+- project relevance (20%)
+- communication/self-description (10%)
+
+IMPORTANT RULES:
+- First compute each category separately (0–100)
+- Then calculate final weighted score
+- Do NOT round to common values like 70, 75, 80, 85
+- Final score must vary realistically based on weaknesses in input
+- If strong in all areas → 85–95
+- If mixed → 60–84
+- If weak → 30–60
+- Avoid repeated identical score patterns
+
 - Return JSON only
 - No markdown
 - No explanation
@@ -177,6 +190,21 @@ ${jobDescription}
     // return report
     console.log("RAW AI RESPONSE:");
     console.log(parsedData);
+
+
+
+    
+    // 🔥 SANITIZE HERE (BEFORE ZOD)
+    parsedData.skillsGap = parsedData.skillsGap
+        .filter(Boolean)
+        .slice(0, 8);
+
+    // optional safety (recommended)
+    parsedData.technicalQuestions = parsedData.technicalQuestions?.slice(0, 10);
+    parsedData.behavioralQuestions = parsedData.behavioralQuestions?.slice(0, 10);
+    parsedData.preparationPlan = parsedData.preparationPlan?.slice(0, 10);
+
+    
 
     const validatedReport = interviewReportSchema.parse(parsedData);
 
