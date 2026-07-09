@@ -5,11 +5,9 @@ const app = express();
 //middlwera
 app.use(express.json())
 app.use(cookieParser())
+console.log("CLIENT_URL:", process.env.CLIENT_URL);
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        process.env.CLIENT_URL,
-    ],
+    origin: process.env.CLIENT_URL,
     credentials: true,
 }));
 
