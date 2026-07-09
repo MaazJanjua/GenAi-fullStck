@@ -87,11 +87,11 @@ const Register = () => {
               className="w-full px-4 sm:px-5 py-16 h-[5vh] sm:py-3.5 text-sm sm:text-base bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500"
             />
           </div>
-          <button className='button primary-button  w-full mt-2 '>Login</button>
+          <button className='button primary-button  w-full mt-2 '>Register</button>
         </form>
 
         {/* <p>Already have an account? <Link to={'/login'} className='text-blue-600 font-bold underline text-[.8vw]'>Login</Link> </p> */}
-        <p className='pt-[1vh] text-[1.3vw] font-bold'>Already have an account <Link to={'/login'} className='text-blue-600 font-bold underline text-[1.5vw] '>Register</Link> </p>
+        <p className='pt-[1vh] text-[1.3vw] font-bold'>Already have an account <Link to={'/login'} className='text-blue-600 font-bold underline text-[1.5vw] '>Login</Link> </p>
 
       </div>
     </main>

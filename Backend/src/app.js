@@ -6,9 +6,12 @@ const app = express();
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    CLIENT_URL: process.env.CLIENT_URL,
-    credentials: true
-}))
+    origin: [
+        "http://localhost:5173",
+        process.env.CLIENT_URL,
+    ],
+    credentials: true,
+}));
 
 
 // require all the routes here
