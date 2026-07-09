@@ -7,7 +7,7 @@ app.use(express.json())
 app.use(cookieParser())
 console.log("CLIENT_URL:", process.env.CLIENT_URL);
 app.use(cors({
-    origin: " https://remarkable-brioche-ea363e.netlify.app/",
+    origin: "https://remarkable-brioche-ea363e.netlify.app/",
     credentials: true,
 }));
 
