@@ -60,10 +60,12 @@ export async function logout() {
 
 export async function getMe() {
     try {
-        const response = await api.get('/api/auth/get-me')
-        return response.data
+        const response = await api.get('/api/auth/get-me');
+        console.log("GET ME SUCCESS:", response.data);
+        return response.data;
     } catch (error) {
-        console.log(error);
-
+        console.log("GET ME ERROR:", error.response?.status);
+        console.log("GET ME DATA:", error.response?.data);
+        throw error;
     }
 }
